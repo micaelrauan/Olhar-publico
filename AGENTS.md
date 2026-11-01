@@ -41,7 +41,14 @@ Use TypeScript estrito, módulos pequenos e nomes claros. Prefira Server Compone
 
 ## Graphify
 
-Mantenha importações explícitas e fronteiras de domínio claras para facilitar a análise do grafo de dependências. O grafo está em `graphify-out/`; consulte-o antes de investigar relações entre módulos. Atualize-o com `graphify update .` após alterar código na worktree. O comando `graphify` deve estar disponível no `PATH` para o hook do Codex.
+Mantenha importações explícitas e fronteiras de domínio claras para facilitar a análise do grafo de dependências. O grafo está em `graphify-out/`. O comando `graphify` deve estar disponível no `PATH` para o hook do Codex.
+
+Fluxo obrigatório para todo agente, inclusive em worktrees:
+
+1. Antes de investigar a arquitetura ou relações entre arquivos, consulte o grafo existente com `graphify query "<pergunta>"`.
+2. Depois de alterar código, execute `graphify update .` na raiz da **mesma worktree**, antes do commit ou da entrega. Faça isso automaticamente, sem pedir ao usuário para lembrar.
+3. Inclua no commit os arquivos versionados do grafo que forem alterados (`graphify-out/graph.json`, `graphify-out/graph.html` e `graphify-out/GRAPH_REPORT.md`). Cache e manifesto local continuam ignorados.
+4. Se a atualização falhar ou o comando não estiver instalado, informe o impedimento na entrega e não declare que o grafo está atualizado.
 
 ## graphify
 
