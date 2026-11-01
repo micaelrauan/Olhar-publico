@@ -1,0 +1,2 @@
+type Source = { title: string; url: string; publisher: string; accessedAt?: string | Date };
+export function SourceReference({ source }: { source: Source }) { return <span>Fonte: {source.url ? <a className="text-link" href={source.url} target="_blank" rel="noreferrer">{source.title} ↗</a> : source.title} · {source.publisher}{source.accessedAt && ` · Acesso em ${new Intl.DateTimeFormat("pt-BR", { timeZone: "UTC" }).format(new Date(source.accessedAt))}`}</span>; }

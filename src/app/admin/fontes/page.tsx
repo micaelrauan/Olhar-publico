@@ -1,0 +1,3 @@
+import { prisma } from "@/lib/prisma";
+import { CreateSource } from "@/components/admin/create-source";
+export default async function Sources() { const sources = process.env.DATABASE_URL ? await prisma.source.findMany({ orderBy: { createdAt: "desc" }, take: 30 }).catch(() => []) : []; return <main><h1 className="page-title">Fontes</h1><p className="muted">Cada publicação precisa ter pelo menos uma fonte vinculada.</p><div className="directory-list">{sources.map((s) => <div className="data-row" key={s.id}><b>{s.title}</b><a className="text-link" href={s.url} target="_blank" rel="noreferrer">Abrir fonte</a></div>)}</div><CreateSource /></main>; }

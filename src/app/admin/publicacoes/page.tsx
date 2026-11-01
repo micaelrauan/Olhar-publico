@@ -1,0 +1,3 @@
+import { prisma } from "@/lib/prisma";
+import { CreatePublication } from "@/components/admin/create-publication";
+export default async function Publications() { const [publications, sources] = process.env.DATABASE_URL ? await Promise.all([prisma.publication.findMany({ orderBy: { updatedAt: "desc" } }), prisma.source.findMany({ select: { id: true, title: true } })]).catch(() => [[], []]) : [[], []]; return <main><h1 className="page-title">Publicações</h1><p className="muted">Textos começam como rascunho e exigem revisão antes da publicação.</p><div className="directory-list">{publications.map((p) => <div className="data-row" key={p.id}><b>{p.title}</b><span className="demo-label">{p.status}</span></div>)}</div><CreatePublication sources={sources} /></main>; }

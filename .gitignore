@@ -1,0 +1,10 @@
+node_modules
+.next
+.next-verify
+.env*
+!.env.example
+generated
+*.tsbuildinfo
+.impeccable/review
+*.log
+.vercel

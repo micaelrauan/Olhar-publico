@@ -1,0 +1,206 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ReviewStatus {
+  DRAFT
+  IN_REVIEW
+  APPROVED
+  REJECTED
+  PUBLISHED
+}
+
+enum CaseStatus {
+  ALLEGATION
+  UNDER_INVESTIGATION
+  CHARGED
+  DISMISSED
+  CONVICTED
+  ACQUITTED
+}
+
+enum AdminRole {
+  EDITOR
+  ADMIN
+}
+
+model Politician {
+  id          String @id @default(cuid())
+  slug        String @unique
+  name        String
+  party       String
+  office      String
+  state       String @db.VarChar(2)
+  biography   String @db.Text
+  isDemo      Boolean @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  expenses    Expense[]
+  amendments  Amendment[]
+  statements  Statement[]
+  cases       LegalCase[]
+  events      TimelineEvent[]
+  publications Publication[]
+
+  @@index([name])
+  @@index([party, state])
+}
+
+model Source {
+  id          String @id @default(cuid())
+  title       String
+  url         String
+  publisher   String
+  publishedAt DateTime?
+  accessedAt  DateTime @default(now())
+  isDemo      Boolean @default(false)
+  createdAt   DateTime @default(now())
+  expenses    Expense[]
+  amendments  Amendment[]
+  statements  Statement[]
+  cases       LegalCase[]
+  events      TimelineEvent[]
+  publications PublicationSource[]
+}
+
+model Expense {
+  id String @id @default(cuid())
+  politicianId String
+  politician Politician @relation(fields: [politicianId], references: [id])
+  sourceId String
+  source Source @relation(fields: [sourceId], references: [id])
+  description String
+  amount Decimal @db.Decimal(14, 2)
+  occurredAt DateTime
+  context String @db.Text
+  createdAt DateTime @default(now())
+}
+
+model Amendment {
+  id String @id @default(cuid())
+  politicianId String
+  politician Politician @relation(fields: [politicianId], references: [id])
+  sourceId String
+  source Source @relation(fields: [sourceId], references: [id])
+  destination String
+  amount Decimal @db.Decimal(14, 2)
+  year Int
+  context String @db.Text
+  createdAt DateTime @default(now())
+}
+
+model Statement {
+  id String @id @default(cuid())
+  politicianId String
+  politician Politician @relation(fields: [politicianId], references: [id])
+  sourceId String
+  source Source @relation(fields: [sourceId], references: [id])
+  quote String @db.Text
+  context String @db.Text
+  saidAt DateTime
+  factCheck String? @db.Text
+  createdAt DateTime @default(now())
+}
+
+model LegalCase {
+  id String @id @default(cuid())
+  politicianId String
+  politician Politician @relation(fields: [politicianId], references: [id])
+  sourceId String
+  source Source @relation(fields: [sourceId], references: [id])
+  title String
+  status CaseStatus
+  summary String @db.Text
+  outcome String? @db.Text
+  occurredAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model TimelineEvent {
+  id String @id @default(cuid())
+  politicianId String
+  politician Politician @relation(fields: [politicianId], references: [id])
+  sourceId String
+  source Source @relation(fields: [sourceId], references: [id])
+  title String
+  description String @db.Text
+  occurredAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Publication {
+  id String @id @default(cuid())
+  slug String @unique
+  title String
+  summary String @db.Text
+  body String @db.Text
+  status ReviewStatus @default(DRAFT)
+  isDemo Boolean @default(false)
+  politicianId String?
+  politician Politician? @relation(fields: [politicianId], references: [id])
+  authorId String?
+  author AdminUser? @relation(fields: [authorId], references: [id])
+  publishedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sources PublicationSource[]
+  revisions Revision[]
+}
+
+model PublicationSource {
+  publicationId String
+  publication Publication @relation(fields: [publicationId], references: [id])
+  sourceId String
+  source Source @relation(fields: [sourceId], references: [id])
+  @@id([publicationId, sourceId])
+}
+
+model Revision {
+  id String @id @default(cuid())
+  publicationId String
+  publication Publication @relation(fields: [publicationId], references: [id])
+  editorId String?
+  editor AdminUser? @relation(fields: [editorId], references: [id])
+  note String
+  snapshot Json
+  createdAt DateTime @default(now())
+}
+
+model AdminUser {
+  id String @id @default(cuid())
+  email String @unique
+  name String
+  passwordHash String
+  role AdminRole @default(EDITOR)
+  createdAt DateTime @default(now())
+  publications Publication[]
+  revisions Revision[]
+  changes ChangeLog[]
+}
+
+model ChangeLog {
+  id String @id @default(cuid())
+  entityType String
+  entityId String
+  action String
+  actorId String
+  actor AdminUser @relation(fields: [actorId], references: [id])
+  details Json
+  createdAt DateTime @default(now())
+
+  @@index([entityType, entityId, createdAt])
+}
+
+model AgentLog {
+  id String @id @default(cuid())
+  agent String
+  action String
+  status String
+  details Json
+  createdAt DateTime @default(now())
+}

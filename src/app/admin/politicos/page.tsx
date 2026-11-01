@@ -1,0 +1,3 @@
+import { prisma } from "@/lib/prisma";
+import { CreatePolitician } from "@/components/admin/create-politician";
+export default async function AdminPoliticians() { const people = process.env.DATABASE_URL ? await prisma.politician.findMany({ orderBy: { name: "asc" } }).catch(() => []) : []; return <main><h1 className="page-title">Políticos</h1><p className="muted">Gerencie perfis do banco de dados. Perfis fictícios públicos não aparecem nesta lista.</p><div className="directory-list">{people.map((p) => <div className="data-row" key={p.id}><b>{p.name}</b><span className="muted">{p.office} · {p.state}</span></div>)}</div><CreatePolitician /></main>; }

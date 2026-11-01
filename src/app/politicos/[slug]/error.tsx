@@ -1,0 +1,2 @@
+"use client";
+export default function ProfileError({ reset }: { error: Error; reset: () => void }) { return <main className="container page-intro"><h1 className="page-title">Perfil indisponível</h1><p>A fonte pública não respondeu agora. Tente novamente em alguns minutos ou consulte diretamente os Dados Abertos da Câmara dos Deputados.</p><button className="button" onClick={reset}>Tentar novamente</button></main>; }
