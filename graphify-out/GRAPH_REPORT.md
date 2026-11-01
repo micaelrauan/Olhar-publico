@@ -1,16 +1,16 @@
-# Graph Report - olhar-publico  (2026-11-01)
+# Graph Report - design-system  (2026-11-01)
 
 ## Corpus Check
-- 70 files · ~20,584 words
+- 81 files · ~24,964 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 373 nodes · 437 edges · 34 communities (22 shown, 12 thin omitted)
+- 441 nodes · 684 edges · 31 communities (21 shown, 10 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `f389efe4`
+- Built from commit: `251d352b`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -20,14 +20,11 @@
 - compilerOptions
 - devDependencies
 - [slug]/page.tsx
-- admin/politicos/page.tsx
+- card.tsx
 - components.json
-- scripts
 - contracts.ts
 - prisma.ts
-- site-header.tsx
-- auth.ts
-- metodologia/page.tsx
+- cn
 - next-auth.d.ts
 - eslint.config.mjs
 - create-admin.mjs
@@ -50,77 +47,73 @@
 - THIRD_PARTY_NOTICES.md
 
 ## God Nodes (most connected - your core abstractions)
-1. `compilerOptions` - 16 edges
-2. `requireEditor()` - 13 edges
-3. `What You Must Do When Invoked` - 12 edges
-4. `getPolitician()` - 11 edges
-5. `/graphify` - 10 edges
-6. `Olhar Público` - 10 edges
-7. `scripts` - 9 edges
-8. `Convenções para agentes e contribuidores` - 9 edges
-9. `Olhar Público` - 9 edges
-10. `graphify reference: extra exports and benchmark` - 8 edges
+1. `cn()` - 21 edges
+2. `compilerOptions` - 16 edges
+3. `Card` - 13 edges
+4. `CardHeader` - 13 edges
+5. `CardContent` - 13 edges
+6. `requireEditor()` - 13 edges
+7. `Button` - 12 edges
+8. `CardTitle` - 12 edges
+9. `What You Must Do When Invoked` - 12 edges
+10. `getPolitician()` - 11 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `GET()` --calls--> `getPolitician()`  [EXTRACTED]
   src/app/api/politicians/[slug]/route.ts → src/domain/politicians/repository.ts
+- `News()` --calls--> `dateBR()`  [EXTRACTED]
+  src/app/noticias/page.tsx → src/lib/utils.ts
 - `generateMetadata()` --calls--> `getPolitician()`  [EXTRACTED]
   src/app/politicos/[slug]/page.tsx → src/domain/politicians/repository.ts
 - `PATCH()` --calls--> `requireEditor()`  [EXTRACTED]
   src/app/api/politicians/[slug]/route.ts → src/lib/admin.ts
 - `GET()` --calls--> `listPoliticians()`  [EXTRACTED]
   src/app/api/politicians/route.ts → src/domain/politicians/repository.ts
-- `POST()` --calls--> `requireEditor()`  [EXTRACTED]
-  src/app/api/politicians/route.ts → src/lib/admin.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (34 total, 12 thin omitted)
+## Communities (31 total, 10 thin omitted)
 
 ### Community 0 - "repository.ts"
 Cohesion: 0.12
-Nodes (24): GET(), Home(), metadata, Politicians(), getPolitician(), listPoliticians(), listPoliticiansPage(), mode() (+16 more)
+Nodes (24): metadata, News(), PublishedArticle, Politicians(), getPolitician(), listPoliticiansPage(), mode(), source() (+16 more)
 
 ### Community 1 - "dependencies"
-Cohesion: 0.06
-Nodes (35): bcryptjs, class-variance-authority, clsx, @fontsource/ibm-plex-sans, @fontsource/source-serif-4, lucide-react, next, next-auth (+27 more)
+Cohesion: 0.05
+Nodes (39): bcryptjs, class-variance-authority, clsx, @fontsource/ibm-plex-sans, @fontsource/source-serif-4, lucide-react, next, next-auth (+31 more)
 
 ### Community 2 - "compilerOptions"
 Cohesion: 0.07
 Nodes (26): dom, dom.iterable, esnext, next-env.d.ts, .next/types/**/*.ts, node_modules, **/*.ts, **/*.tsx (+18 more)
 
 ### Community 3 - "devDependencies"
-Cohesion: 0.09
-Nodes (23): eslint, eslint-config-next, @eslint/eslintrc, devDependencies, eslint, eslint-config-next, @eslint/eslintrc, prisma (+15 more)
+Cohesion: 0.05
+Nodes (36): eslint, eslint-config-next, @eslint/eslintrc, devDependencies, eslint, eslint-config-next, @eslint/eslintrc, prisma (+28 more)
 
 ### Community 4 - "[slug]/page.tsx"
-Cohesion: 0.15
-Nodes (14): metadata, News(), generateMetadata(), Profile(), MenuToggleIcon(), ExpenseChart(), Source, SourceReference() (+6 more)
+Cohesion: 0.12
+Nodes (17): generateMetadata(), Profile(), ExpenseChart(), Source, SourceReference(), Select, SelectProps, Table (+9 more)
+
+### Community 5 - "card.tsx"
+Cohesion: 0.10
+Nodes (31): SourceItem, PoliticianItem, PublicationItem, SourceOption, PublicationWithSources, features, metadata, CreatePolitician() (+23 more)
 
 ### Community 6 - "components.json"
-Cohesion: 0.12
-Nodes (15): aliases, components, hooks, lib, ui, utils, iconLibrary, rsc (+7 more)
-
-### Community 7 - "scripts"
-Cohesion: 0.14
-Nodes (13): name, packageManager, private, scripts, admin:create, build, db:generate, db:migrate (+5 more)
+Cohesion: 0.11
+Nodes (17): aliases, components, hooks, lib, ui, utils, iconLibrary, registries (+9 more)
 
 ### Community 8 - "contracts.ts"
 Cohesion: 0.18
 Nodes (8): AgentContract, AgentDraft, AgentInput, AgentLog, AgentName, agentNames, Evidence, mockAgentLogs
 
 ### Community 9 - "prisma.ts"
-Cohesion: 0.10
-Nodes (17): POST(), GET(), PATCH(), input, POST(), GET(), input, POST() (+9 more)
+Cohesion: 0.12
+Nodes (19): GET(), POST(), GET(), PATCH(), input, POST(), GET(), input (+11 more)
 
-### Community 10 - "site-header.tsx"
-Cohesion: 0.24
-Nodes (6): metadata, links, SiteHeader(), ThemeProvider(), ThemeToggle(), useScroll()
-
-### Community 12 - "metodologia/page.tsx"
-Cohesion: 0.40
-Nodes (3): metadata, MethodologyFaq(), questions
+### Community 10 - "cn"
+Cohesion: 0.07
+Nodes (27): navItems, ibmPlexSans, metadata, sourceSerif4, metadata, MenuToggleIcon(), MethodologyFaq(), questions (+19 more)
 
 ### Community 13 - "next-auth.d.ts"
 Cohesion: 0.33
@@ -163,24 +156,24 @@ Cohesion: 0.50
 Nodes (3): For --cluster-only, For --update (incremental re-extraction), graphify reference: incremental update and cluster-only
 
 ## Knowledge Gaps
-- **184 isolated node(s):** `$schema`, `style`, `rsc`, `tsx`, `css` (+179 more)
+- **216 isolated node(s):** `$schema`, `style`, `rsc`, `tsx`, `css` (+211 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **12 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **10 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `dependencies` connect `dependencies` to `scripts`?**
-  _High betweenness centrality (0.026) - this node is a cross-community bridge._
-- **Why does `devDependencies` connect `devDependencies` to `scripts`?**
-  _High betweenness centrality (0.019) - this node is a cross-community bridge._
+- **Why does `cn()` connect `cn` to `[slug]/page.tsx`, `card.tsx`?**
+  _High betweenness centrality (0.027) - this node is a cross-community bridge._
+- **Why does `dependencies` connect `dependencies` to `devDependencies`?**
+  _High betweenness centrality (0.022) - this node is a cross-community bridge._
 - **What connects `$schema`, `style`, `rsc` to the rest of the system?**
-  _184 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _216 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `repository.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.12183908045977011 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.11822660098522167 - nodes in this community are weakly interconnected._
 - **Should `dependencies` be split into smaller, more focused modules?**
-  _Cohesion score 0.05714285714285714 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05128205128205128 - nodes in this community are weakly interconnected._
 - **Should `compilerOptions` be split into smaller, more focused modules?**
   _Cohesion score 0.07407407407407407 - nodes in this community are weakly interconnected._
 - **Should `devDependencies` be split into smaller, more focused modules?**
-  _Cohesion score 0.08695652173913043 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05405405405405406 - nodes in this community are weakly interconnected._

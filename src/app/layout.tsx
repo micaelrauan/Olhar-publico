@@ -1,13 +1,72 @@
 import type { Metadata } from "next";
+import { IBM_Plex_Sans, Source_Serif_4 } from "next/font/google";
 import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
 import { ThemeProvider } from "@/components/theme-provider";
-import "@fontsource/ibm-plex-sans/400.css";
-import "@fontsource/ibm-plex-sans/600.css";
-import "@fontsource/ibm-plex-sans/700.css";
-import "@fontsource/source-serif-4/400.css";
-import "@fontsource/source-serif-4/700.css";
+import { Separator } from "@/components/ui/separator";
 import "./globals.css";
 
-export const metadata: Metadata = { title: { default: "Olhar Público", template: "%s | Olhar Público" }, description: "O poder é público. A informação também." };
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) { return <html lang="pt-BR" suppressHydrationWarning><body><ThemeProvider><SiteHeader />{children}<footer className="footer"><div className="container footer-inner"><div><strong>Olhar Público.</strong><div className="small muted">O poder é público. A informação também.</div></div><div className="small"><Link href="/metodologia">Metodologia e fontes</Link> · <Link href="/admin">Administração</Link></div></div></footer></ThemeProvider></body></html>; }
+const ibmPlexSans = IBM_Plex_Sans({
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const sourceSerif4 = Source_Serif_4({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-serif",
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  title: { default: "Olhar Público", template: "%s | Olhar Público" },
+  description: "O poder é público. A informação também.",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <html
+      lang="pt-BR"
+      suppressHydrationWarning
+      className={`${ibmPlexSans.variable} ${sourceSerif4.variable}`}
+    >
+      <body>
+        <ThemeProvider>
+          <SiteHeader />
+          {children}
+          <footer className="border-t border-border mt-16">
+            <div className="container py-9">
+              <div className="flex items-center justify-between gap-5 flex-wrap">
+                <div>
+                  <strong className="font-serif text-lg">Olhar Público.</strong>
+                  <p className="text-sm text-muted-foreground mt-0.5">
+                    O poder é público. A informação também.
+                  </p>
+                </div>
+                <nav className="flex items-center gap-4 text-sm" aria-label="Links do rodapé">
+                  <Link
+                    href="/metodologia"
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    Metodologia e fontes
+                  </Link>
+                  <Separator orientation="vertical" className="h-4" />
+                  <Link
+                    href="/admin"
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    Administração
+                  </Link>
+                </nav>
+              </div>
+            </div>
+          </footer>
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}

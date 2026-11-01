@@ -1,31 +1,107 @@
 "use client";
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MenuToggleIcon } from "@/components/efferd/menu-toggle-icon";
+import { Menu } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Separator } from "@/components/ui/separator";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useScroll } from "@/hooks/use-scroll";
+import { cn } from "@/lib/utils";
 
-// Estrutura de navegação e menu móvel adaptada do bloco header-1 do Efferd UI (MIT).
-const links = [{ href: "/politicos", label: "Políticos" }, { href: "/noticias", label: "Notícias" }, { href: "/metodologia", label: "Metodologia" }];
+const links = [
+  { href: "/politicos", label: "Políticos" },
+  { href: "/noticias", label: "Notícias" },
+  { href: "/metodologia", label: "Metodologia" },
+];
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const scrolled = useScroll();
 
-  useEffect(() => setMounted(true), []);
-  useEffect(() => setOpen(false), [pathname]);
-  useEffect(() => {
-    if (!open) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const onEscape = (event: KeyboardEvent) => { if (event.key === "Escape") setOpen(false); };
-    window.addEventListener("keydown", onEscape);
-    return () => { document.body.style.overflow = previous; window.removeEventListener("keydown", onEscape); };
-  }, [open]);
+  return (
+    <header
+      className={cn(
+        "sticky top-0 z-50 border-b border-border bg-card transition-shadow duration-200",
+        scrolled && "shadow-sm"
+      )}
+    >
+      <div className="container flex min-h-[76px] items-center justify-between gap-5">
+        {/* Brand */}
+        <Link
+          href="/"
+          className="font-serif text-[1.6rem] font-bold tracking-[-0.035em] whitespace-nowrap"
+        >
+          Olhar <span className="text-primary">Público.</span>
+        </Link>
 
-  return <header className={`header efferd-header${scrolled ? " efferd-header--scrolled" : ""}`}><div className="container header-inner"><Link href="/" className="brand">Olhar <span>Público.</span></Link><nav className="nav desktop-nav" aria-label="Navegação principal">{links.map((link) => <Link href={link.href} key={link.href} aria-current={pathname === link.href ? "page" : undefined}>{link.label}</Link>)}<ThemeToggle /></nav><button type="button" className="menu-toggle button button-outline" aria-label={open ? "Fechar menu" : "Abrir menu"} aria-expanded={open} aria-controls="mobile-menu" onClick={() => setOpen((value) => !value)}><MenuToggleIcon open={open} /></button></div>{mounted && open && createPortal(<div id="mobile-menu" className="mobile-menu"><nav aria-label="Navegação móvel">{links.map((link) => <Link href={link.href} key={link.href} onClick={() => setOpen(false)} aria-current={pathname === link.href ? "page" : undefined}>{link.label}</Link>)}</nav><div className="mobile-menu-theme"><span>Alternar tema</span><ThemeToggle /></div></div>, document.body)}</header>;
+        {/* Desktop nav */}
+        <nav
+          className="hidden md:flex items-center gap-7 text-sm font-bold"
+          aria-label="Navegação principal"
+        >
+          {links.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              aria-current={pathname === link.href ? "page" : undefined}
+              className={cn(
+                "transition-colors hover:text-primary",
+                pathname === link.href && "text-primary"
+              )}
+            >
+              {link.label}
+            </Link>
+          ))}
+          <ThemeToggle />
+        </nav>
+
+        {/* Mobile: theme + hamburger */}
+        <div className="flex items-center gap-2 md:hidden">
+          <ThemeToggle />
+          <Button
+            variant="outline"
+            size="icon"
+            aria-label={open ? "Fechar menu" : "Abrir menu"}
+            aria-expanded={open}
+            onClick={() => setOpen((v) => !v)}
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Mobile Sheet */}
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent side="right" className="w-72 pt-14">
+          <SheetHeader className="sr-only">
+            <SheetTitle>Navegação</SheetTitle>
+          </SheetHeader>
+          <nav className="flex flex-col" aria-label="Navegação móvel">
+            {links.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setOpen(false)}
+                aria-current={pathname === link.href ? "page" : undefined}
+                className={cn(
+                  "font-serif text-2xl py-5 border-b border-border text-foreground hover:text-primary transition-colors",
+                  pathname === link.href && "text-primary"
+                )}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+          <Separator className="mt-6" />
+          <div className="flex items-center justify-between pt-5">
+            <span className="text-sm text-muted-foreground">Alternar tema</span>
+            <ThemeToggle />
+          </div>
+        </SheetContent>
+      </Sheet>
+    </header>
+  );
 }
