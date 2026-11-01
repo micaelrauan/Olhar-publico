@@ -66,7 +66,15 @@ Perfis fictícios aparecem somente no modo `demo` e são identificados. Conteúd
 
 ## Graphify
 
-A divisão por domínio e as dependências explícitas preparam o repositório para mapeamento pelo Graphify. Não há integração ou comando configurado, pois a ferramenta não está disponível neste ambiente. Consulte a documentação oficial da versão instalada antes de ativá-la.
+O Graphify está configurado para o Codex neste repositório. O grafo inicial está em `graphify-out/graph.json`; `graphify-out/GRAPH_REPORT.md` resume os módulos e `graphify-out/graph.html` permite explorá-los no navegador. A instalação local precisa ter o comando `graphify` no `PATH` (pacote Python `graphifyy`). O hook em `.codex/hooks.json` consulta o grafo antes do uso de ferramentas no Codex.
+
+```bash
+graphify query "Como as rotas públicas consultam a API da Câmara?"
+graphify update .
+graphify cluster-only . --no-label
+```
+
+Execute `graphify update .` após alterar código em cada worktree. Se recriar o grafo do zero, use `graphify extract . --code-only --max-workers 4` antes de `graphify cluster-only . --no-label`. A extração inicial usou apenas análise de código, sem LLM. Arquivos de cache locais ficam fora do Git. O arquivo `.graphifyignore` exclui artefatos gerados e dependências do mapeamento.
 
 ## Componentes Efferd UI
 

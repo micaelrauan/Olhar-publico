@@ -8,3 +8,6 @@ generated
 .impeccable/review
 *.log
 .vercel
+graphify-out/cache/
+graphify-out/.graphify_*
+graphify-out/manifest.json
